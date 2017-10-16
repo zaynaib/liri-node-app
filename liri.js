@@ -1,21 +1,3 @@
-/*
-Latest documetation of the twitter npm package is on github
-[https://github.com/desmondmorris/node-twitter]
-Fun tutorial on how to create at twitter bot
-[https://www.youtube.com/watch?v=GQC2lJIAyzM]
-
-twitter api doc on paths
-[https://developer.twitter.com/en/docs/tweets/post-and-engage/api-reference/get-favorites-list]
-client.get(path, params, callback);
-
-How to create a twitter bot
-[https://dzone.com/articles/how-to-use-twitter-api-using-nodejs]
-
-http://www.tutorialsteacher.com/nodejs/nodejs-module-exports
-https://github.com/RyanSy/LIRI/blob/master/liri.js
-*/
-
-
 //load the twitter package
 var Twitter = require('twitter');
 
@@ -94,7 +76,7 @@ function mySpotify(parmetersArr){
 
 	}//end of for loop
 
-	console.log("This is the url query " + parameter);
+	//console.log("This is the url query " + parameter);
 	
 	var spotify = new Spotify(spotifyKeys);
      
@@ -105,7 +87,7 @@ function mySpotify(parmetersArr){
  	
  	//string the object that the callback recieves
 	var myStr = JSON.stringify(data, null, 2); 
-	console.log(myStr);
+	
 	
 	//create a javascript object from the spotify data
 	var myObj = JSON.parse(myStr);
@@ -141,7 +123,7 @@ function movieMagic(parmetersArr){
 	
 	var parameter ="";
 	if(parmetersArr[3] === undefined){
-		parameter ="Mr.+Nobody";
+		parameter ="Mr. Nobody";
 
  	 }else{
 	
@@ -164,7 +146,7 @@ function movieMagic(parmetersArr){
     	var title = JSON.parse(body).Title;
     	var year = JSON.parse(body).Year;
     	var ratingIMBD = JSON.parse(body).imdbRating;
-    	var ratingRotten = JSON.parse(body).Ratings[1].source;
+    	var ratingRotten = JSON.parse(body).Ratings[1].Value;
        	var country = JSON.parse(body).Country;
     	var lang = JSON.parse(body).Language;
     	var moviePlot = JSON.parse(body).Plot;
@@ -278,7 +260,7 @@ if (innerCommands === "spotify-this-song") {
 	} //end of try
 	catch(e) {
     	console.log('Error:', e.stack);
-	}
+	}//end of catch
 
 }
 
