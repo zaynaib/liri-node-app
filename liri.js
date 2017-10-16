@@ -45,9 +45,15 @@ var spotifyKeys = apiKey.spotifyKeys;
 console.log(tweetKeys);
 console.log(sKeys);
 */
-var commands = process.argv[2];
+/*
+
 var parameter = process.argv[3];
-console.log(parameter);
+*/
+
+var parmetersArgs = process.argv;
+var commands = parmetersArgs[2];
+
+console.log(commands);
 
 function myTweets(){
 	  //create a twitter client to authenicate my twitter account
@@ -68,14 +74,14 @@ client.get('statuses/user_timeline', params, function(error, tweets, response) {
 
 }
 
+function mySpotify(parmetersArr){
+	console.log(parmetersArr);
+	var parameter;
+	for(var i =3; i<parmetersArr.length;i++){
+		parameter = parmetersArr[i] + "+";
+		console.log(parameter);
 
-if (commands === "my-tweets") {
-	myTweets();
-}
-
-
-if (commands === "spotify-this-song") {
-	console.log(parameter)
+	}
 	var spotify = new Spotify(spotifyKeys);
  
 	spotify.search({ type: 'track', query: parameter }, function(err, data) {
@@ -88,37 +94,60 @@ if (commands === "spotify-this-song") {
 
 }
 
+function movieMagic(parmetersArr){
 
-if (commands === "movie-this") {
-	console.log(parameter)
-
-	if(parameter === undefined){
+	var parameter;
+	if(parmetersArr[3] === undefined){
 		parameter ="Mr.+Nobody";
 
- 	 }
-	// Then run a request to the OMDB API with the movie specified
-request("http://www.omdbapi.com/?t="+parameter+"&y=&plot=short&apikey=40e9cece", function(error, response, body) {
-
+ 	 }else{
 	
+	for(var i =3; i<parmetersArr.length;i++){
+		parameter = parmetersArr[i] + "+";
+		console.log(parameter);
+		}
+	}
 
-  // If the request is successful (i.e. if the response status code is 200)
-  if (!error && response.statusCode === 200) {
+		// Then run a request to the OMDB API with the movie specified
+	request("http://www.omdbapi.com/?t="+parameter+"&y=&plot=short&apikey=40e9cece", 
+	function(error, response, body) {
 
-    // Parse the body of the site and recover just the imdbRating
-    // (Note: The syntax below for parsing isn't obvious. Just spend a few moments dissecting it).
-    console.log("The movie's rating is: " + JSON.parse(body).imdbRating);
-  }
-});
+		// If the request is successful (i.e. if the response status code is 200)
+  		if (!error && response.statusCode === 200) {
 
+    	// Parse the body of the site and recover just the imdbRating
+    	// (Note: The syntax below for parsing isn't obvious. Just spend a few moments dissecting it).
+    	console.log("The movie's rating is: " + JSON.parse(body).imdbRating);
+  		}
+	});
+
+}
+
+
+if (commands === "my-tweets") {
+	myTweets();
+}
+
+
+if (commands === "spotify-this-song") {
+	//var parmetersArgs = process.argv[];
+	mySpotify(parmetersArgs);
+
+}
+
+
+if (commands === "movie-this") {
+	console.log(parmetersArgs[3]);
+	movieMagic(parmetersArgs);
 }
 
 
 if (commands === "do-what-it-says") {
 
 	try {  
-   	 	var data = fs.readFileSync('random.txt', 'utf8');
+   	 	var textData = fs.readFileSync('random.txt', 'utf8');
     	//console.log(data);   
-    	var dataArr = data.split(",");
+    	var dataArr = textData.split(",");
     	console.log(dataArr);
 
     var spotify = new Spotify(spotifyKeys);
