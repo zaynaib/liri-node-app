@@ -31,67 +31,64 @@ var fs = require("fs");
 //get the twitter authorization keys from keys.js
 var apiKey = require('./keys.js'); 
 
-//test to see if i can get the keys
-//console.log(apiKey);
-
 //twitter keys
 var tweetKeys = apiKey.twitterKeys;
 
 //spotify keys
 var spotifyKeys = apiKey.spotifyKeys;
 
-//test if I can see the keys
-/*
-console.log(tweetKeys);
-console.log(sKeys);
-*/
-/*
-
-var parameter = process.argv[3];
-*/
-
+//grab all the arguments for this node program
 var parmetersArgs = process.argv;
+
+//whatever function the user wants to invoke
 var commands = parmetersArgs[2];
 
-//console.log(commands);
 
+//twitter function
+//grabs the 20 latest tweets from user account and the date/time
 function myTweets(){
 	if (commands === "my-tweets") {
 	
-//create a twitter client to authenicate my twitter account
-var client = new Twitter(tweetKeys);
+	//create a twitter client to authenicate my twitter account
+	var client = new Twitter(tweetKeys);
 
-//the person whose tweets you want to search
-var params = {screen_name: 'AmazingSpeciali'};
+	//the person whose tweets you want to search
+	var params = {screen_name: 'AmazingSpeciali'};
 
-//get the tweets from the user timeline
-client.get('statuses/user_timeline', params, function(error, tweets, response) {
-  if (!error) {
+	//get the tweets from the user timeline
+	client.get('statuses/user_timeline', params, function(error, tweets, response) {
+  	if (!error) {
     //console.log(tweets);
-    //console.log(response);
-     //console.log(JSON.stringify(tweets, null, 2));
      for(var i =0 ; i<tweets.length; i++){
      	console.log(JSON.stringify(tweets[i].text, null, 2));
      	console.log(JSON.stringify(tweets[i].created_at, null, 2));
-     }
+     }//end of for loop
 
-  }
-});
-}
+  	}//end of if error statemnt
+	});//end of get ajax call to twitter api
+ 
+ }//end of entire if command
 
-}
+}//end of function
 
 function mySpotify(parmetersArr){
-	//console.log(parmetersArr);
 
+	//if the command is spotify this song do the rest of this function
 	if (commands === "spotify-this-song") {	
 
-	//var parameter;
+	//parameter that will be used for the search query
 	var parameter="";
-	var songName=""
+
+	//variable that holds the user song
+	var songName="";
+
+	//loop through parameters array starting where the user will write in their song query
 	for(var i =3; i<parmetersArr.length;i++){
-		//parameter = parmetersArr[i] + "+";
+		
+		//creates a parameter for the query string.
+		//spaces are represented by plus signs
 		parameter = parameter + parmetersArr[i] + "+" ;
+
 		console.log(parameter);
 		songName = songName + " " + parmetersArr[i];
 
@@ -108,21 +105,18 @@ function mySpotify(parmetersArr){
  	
  	//string the object that the callback recieves
 	var myStr = JSON.stringify(data, null, 2); 
-
+	console.log(myStr);
+	
 	//create a javascript object from the spotify data
 	var myObj = JSON.parse(myStr);
 
-	//console.log(myObj);
-
-	//print out the number of track 'items' recieved by spotify
-	//console.log(myObj.tracks.items.length);
-
 	//grab the info from spotify tracks
 	var spotifyTracks = myObj.tracks.items;
-	//console.log(spotifyTracks);
+	
+	//the length of the spotifyTracks object
 	var spotifyTracksLength= myObj.tracks.items.length;
 	
-
+	//loop through all the tracks and get the value of their properties
 	 for(var i =0 ; i<spotifyTracksLength; i++){
 
 	 	console.log("Artist Name: " + spotifyTracks[i].album.artists[0].name);
@@ -132,16 +126,9 @@ function mySpotify(parmetersArr){
 	    console.log("\n");
 	 	console.log("Spotify preview url " + spotifyTracks[i].album.external_urls.spotify);
 	 	console.log("\n");
-
-
-	 	
-     	//console.log(JSON.stringify(data[i], null, 2));
-     	//console.log(JSON.stringify(tweets[i].created_at, null, 2));
-     }
-	//var myData = JSON.parse(data);
-	//var myData =JSON.stringify(data, null, 2);
-	//console.log(myData.album);
-	}); //end of spotify function loop
+     }//end of spotify loop
+	
+	}); //end of spotify function 
 	
 	}//end of command if statemnet
 	
@@ -151,7 +138,6 @@ function mySpotify(parmetersArr){
 function movieMagic(parmetersArr){
 
 	if (commands === "movie-this") {
-	//console.log(parmetersArgs[3]);
 	
 	var parameter ="";
 	if(parmetersArr[3] === undefined){
@@ -159,13 +145,14 @@ function movieMagic(parmetersArr){
 
  	 }else{
 	
+	//construct movie parameter for the query string
 	for(var i =3; i<parmetersArr.length;i++){
 		parameter = parameter + " "+ parmetersArr[i];
-		console.log(parameter);
+		//console.log(parameter);
 		}
 	}
 
-		// Then run a request to the OMDB API with the movie specified
+	// Then run a request to the OMDB API with the movie specified
 	request("http://www.omdbapi.com/?t="+parameter+"&y=&plot=short&apikey=40e9cece", 
 	function(error, response, body) {
 
@@ -192,48 +179,29 @@ function movieMagic(parmetersArr){
     	console.log("Plot of the movie is: " + moviePlot);
     	console.log("Actors in the movie is: " + movieActors);
 
-
-    	/*
-
-    	  * Title of the movie.
-       * Year the movie came out.
-       * IMDB Rating of the movie.
-       * Rotten Tomatoes Rating of the movie.
-       * Country where the movie was produced.
-       * Language of the movie.
-       * Plot of the movie.
-       * Actors in the movie
-
-		*/
-
   		}
 	});
-	}
-}
+	}//end of movie if
 
-
-myTweets();
-mySpotify(parmetersArgs);
-movieMagic(parmetersArgs);
-
-
-
-
+}//end of function
 
 
 if (commands === "do-what-it-says") {
 
 	try {  
+
+		//read in the file
    	 	var textData = fs.readFileSync('random.txt', 'utf8');
-    	console.log(textData);   
+    	  
+    	//create an array of the first line of random.txt
     	var dataArr = textData.split(",");
-    	console.log(dataArr);
+    	
+    	//get the command 
     	var innerCommands = dataArr[0];
-    	/*
-    	var str = '"a string"';
-		str = str.replace(/^"|"$/g, '');
-		*/
-		
+
+  
+
+	
 if (innerCommands === "spotify-this-song") {
 
     var spotify = new Spotify(spotifyKeys);
@@ -243,10 +211,43 @@ if (innerCommands === "spotify-this-song") {
     	return console.log('Error occurred: ' + err);
  	 }
  
-	console.log(JSON.stringify(data, null, 2)); 
+	//console.log(JSON.stringify(data, null, 2)); 
+
+	//parameter that will be used for the search query
+	var parameter="";
+
+	//variable that holds the user song
+	var songName="";
+
+
+	//string the object that the callback recieves
+	var myStr = JSON.stringify(data, null, 2); 
+	//console.log(myStr);
+	
+	//create a javascript object from the spotify data
+	var myObj = JSON.parse(myStr);
+
+	//grab the info from spotify tracks
+	var spotifyTracks = myObj.tracks.items;
+	
+	//the length of the spotifyTracks object
+	var spotifyTracksLength= myObj.tracks.items.length;
+	
+	//loop through all the tracks and get the value of their properties
+	 for(var i =0 ; i<spotifyTracksLength; i++){
+
+	 	console.log("Artist Name: " + spotifyTracks[i].album.artists[0].name);
+	 	console.log("\n");
+	 	console.log("Song Name:" + songName);
+	 	console.log("Name of Album: " + spotifyTracks[i].album.name);
+	    console.log("\n");
+	 	console.log("Spotify preview url " + spotifyTracks[i].album.external_urls.spotify);
+	 	console.log("\n");
+     }//end of spotify loop
 	});
 
 	}//end of spotify
+	
 
 
 	if (commands === "movie-this") {
@@ -271,7 +272,8 @@ if (innerCommands === "spotify-this-song") {
 	});
 	}//end of movie
 
-
+	myTweets();
+	
 
 	} //end of try
 	catch(e) {
@@ -280,45 +282,10 @@ if (innerCommands === "spotify-this-song") {
 
 }
 
+myTweets();
+mySpotify(parmetersArgs);
+movieMagic(parmetersArgs);
 
 
 
 
-
-
-//get arguments from the user
-//then execute this function
-
-
-
- /*`my-tweets`
-   * This will show your last 20 tweets and when they were created at in your terminal/bash window.
-
-   * `spotify-this-song`
-   * This will show the following information about the song in your terminal/bash window
-     
-     * Artist(s)
-     
-     * The song's name
-     
-     * A preview link of the song from Spotify
-     
-     * The album that the song is from
-
-   * `movie-this`
-    * Title of the movie.
-       * Year the movie came out.
-       * IMDB Rating of the movie.
-       * Rotten Tomatoes Rating of the movie.
-       * Country where the movie was produced.
-       * Language of the movie.
-       * Plot of the movie.
-       * Actors in the movie.
-
-   * `do-what-it-says`
-   * Using the `fs` Node package, LIRI will take the text inside of random.txt and then use it to call one of LIRI's commands.
-     
-     * It should run `spotify-this-song` for "I Want it That Way," as follows the text in `random.txt`.
-     
-     * Feel free to change the text in that document to test out the feature for other commands.
-     */
