@@ -47,6 +47,7 @@ console.log(sKeys);
 */
 var commands = process.argv[2];
 var parameter = process.argv[3];
+console.log(parameter);
 
 function myTweets(){
 	  //create a twitter client to authenicate my twitter account
@@ -90,8 +91,15 @@ if (commands === "spotify-this-song") {
 
 if (commands === "movie-this") {
 	console.log(parameter)
+
+	if(parameter === undefined){
+		parameter ="Mr.+Nobody";
+
+ 	 }
 	// Then run a request to the OMDB API with the movie specified
 request("http://www.omdbapi.com/?t="+parameter+"&y=&plot=short&apikey=40e9cece", function(error, response, body) {
+
+	
 
   // If the request is successful (i.e. if the response status code is 200)
   if (!error && response.statusCode === 200) {
