@@ -90,25 +90,48 @@ function mySpotify(parmetersArr){
 	var parameter="";
 	for(var i =3; i<parmetersArr.length;i++){
 		//parameter = parmetersArr[i] + "+";
-		parameter = parameter + "+" +parmetersArr[i];
+		parameter = parameter + parmetersArr[i] + "+" ;
 		console.log(parameter);
 
-	}
+	}//end of for loop
+
+	console.log("This is the url query " + parameter);
 	
 	var spotify = new Spotify(spotifyKeys);
- 
+     
 	spotify.search({ type: 'track', query: parameter }, function(err, data) {
   	if (err) {
     	return console.log('Error occurred: ' + err);
  	 }
- 
-	console.log(JSON.stringify(data, null, 2)); 
+ 	
+ 	//string the object that the callback recieves
+	var myStr = JSON.stringify(data, null, 2); 
+
+	//create a javascript object from the spotify data
+	var myObj = JSON.parse(myStr);
+
+	//console.log(myObj);
+
+	//print out the number of track 'items' recieved by spotify
+	//console.log(myObj.tracks.items.length);
+
+	//grab the info from spotify tracks
+	var spotifyTracks = myObj.tracks.items;
+	console.log(spotifyTracks);
+	var spotifyTracksLength= myObj.tracks.items.length;
+	
+
+	 for(var i =0 ; i<spotifyTracksLength; i++){
+	 	console.log("working")
+     	//console.log(JSON.stringify(data[i], null, 2));
+     	//console.log(JSON.stringify(tweets[i].created_at, null, 2));
+     }
 	//var myData = JSON.parse(data);
 	//var myData =JSON.stringify(data, null, 2);
 	//console.log(myData.album);
-	});
+	}); //end of spotify function loop
 	
-	}
+	}//end of command if statemnet
 	
 
 }
