@@ -67,9 +67,7 @@ client.get('statuses/user_timeline', params, function(error, tweets, response) {
 
 }
 
-function mySpotify(arg){
 
-}
 if (commands === "my-tweets") {
 	myTweets();
 }
@@ -108,15 +106,26 @@ request("http://www.omdbapi.com/?t="+parameter+"&y=&plot=short&apikey=40e9cece",
 
 
 if (commands === "do-what-it-says") {
-	console.log(parameter)
-var fs = require('fs');
 
-try {  
-    var data = fs.readFileSync('my-file.txt', 'utf8');
-    console.log(data);    
-} catch(e) {
-    console.log('Error:', e.stack);
-}
+	try {  
+   	 	var data = fs.readFileSync('random.txt', 'utf8');
+    	//console.log(data);   
+    	var dataArr = data.split(",");
+    	console.log(dataArr);
+
+    var spotify = new Spotify(spotifyKeys);
+ 
+	spotify.search({ type: 'track', query: dataArr[1] }, function(err, data) {
+  	if (err) {
+    	return console.log('Error occurred: ' + err);
+ 	 }
+ 
+	console.log(JSON.stringify(data, null, 2)); 
+	});
+
+	} catch(e) {
+    	console.log('Error:', e.stack);
+	}
 
 }
 
