@@ -88,10 +88,12 @@ function mySpotify(parmetersArr){
 
 	//var parameter;
 	var parameter="";
+	var songName=""
 	for(var i =3; i<parmetersArr.length;i++){
 		//parameter = parmetersArr[i] + "+";
 		parameter = parameter + parmetersArr[i] + "+" ;
 		console.log(parameter);
+		songName = songName + " " + parmetersArr[i];
 
 	}//end of for loop
 
@@ -117,12 +119,22 @@ function mySpotify(parmetersArr){
 
 	//grab the info from spotify tracks
 	var spotifyTracks = myObj.tracks.items;
-	console.log(spotifyTracks);
+	//console.log(spotifyTracks);
 	var spotifyTracksLength= myObj.tracks.items.length;
 	
 
 	 for(var i =0 ; i<spotifyTracksLength; i++){
-	 	console.log("working")
+
+	 	console.log("Artist Name: " + spotifyTracks[i].album.artists[0].name);
+	 	console.log("\n");
+	 	console.log("Song Name:" + songName);
+	 	console.log("Name of Album: " + spotifyTracks[i].album.name);
+	    console.log("\n");
+	 	console.log("Spotify preview url " + spotifyTracks[i].album.external_urls.spotify);
+	 	console.log("\n");
+
+
+	 	
      	//console.log(JSON.stringify(data[i], null, 2));
      	//console.log(JSON.stringify(tweets[i].created_at, null, 2));
      }
